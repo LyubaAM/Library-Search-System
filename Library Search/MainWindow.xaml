@@ -9,7 +9,7 @@
     <Window.Resources>
     </Window.Resources>
     <Grid Margin="0,5,0,5">
-        <!--<views:SearchBooksView />-->
-        <views:BookDetailsView />
+        <views:SearchBooksView DataContext="{Binding CurrentViewModel}"/>
+        <!--<views:BookDetailsView SearchBooksView />-->
     </Grid>
 </Window>

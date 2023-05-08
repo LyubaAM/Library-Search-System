@@ -29,7 +29,7 @@
             </Grid.RowDefinitions>
             <ComboBox x:Name="cmbSearchCriteria" Grid.Column="0" Grid.Row="0" Margin="5,0,5,0" VerticalContentAlignment="Center">
                 <ComboBoxItem IsSelected="True" ToolTip="Title &amp; Author">Title &amp; Author</ComboBoxItem>
-                <ComboBoxItem >General</ComboBoxItem>
+                <ComboBoxItem >Advanced Search</ComboBoxItem>
             </ComboBox>
             <TextBox 
                 Grid.Column="1" 
@@ -37,7 +37,7 @@
                 Margin="5,0,5,0" 
                 VerticalContentAlignment="Center" 
                 TextWrapping="Wrap" 
-                Text=""
+                Text="{Binding Title}"
                 Visibility="{Binding SelectedItem, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter=Title &amp; Author, ElementName=cmbSearchCriteria}"/>
             <TextBox 
                 Grid.Column="2" 
@@ -45,7 +45,7 @@
                 Margin="5,0,5,0" 
                 VerticalContentAlignment="Center" 
                 TextWrapping="Wrap" 
-                Text=""
+                Text="{Binding Author}"
                 Visibility="{Binding SelectedValue, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter=Title &amp; Author, ElementName=cmbSearchCriteria}"/>
             <TextBox 
                 Grid.Column="1" 
@@ -54,39 +54,12 @@
                 Margin="5,0,5,0" 
                 VerticalContentAlignment="Center" 
                 TextWrapping="Wrap" 
-                Text="" 
-                Visibility="{Binding SelectedValue, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter=General, ElementName=cmbSearchCriteria}"/>
-            <Button x:Name="btnSearch" Content="Search" Grid.Column="3" Grid.Row="0" Margin="5,0,5,0" >
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Background" Value="DarkSlateBlue"/>
-                        <Setter Property="Foreground" Value="LightGray"/>
-                        <Setter Property="FontSize" Value="14"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border Background="{TemplateBinding Background}" >
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightSteelBlue"/>
-                                <Setter Property="Foreground" Value="DarkSlateBlue"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                Text="{Binding AdvancedSearch}" 
+                Visibility="{Binding SelectedValue, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter='Advanced Search', ElementName=cmbSearchCriteria}"/>
+            <Button x:Name="btnSearch" Command="{Binding SearchCommand}" Content="Search" Grid.Column="3" Grid.Row="0" Margin="5,0,5,0" Style="{StaticResource darkBlueBtnStyle}" />
         </Grid>
         <TextBox Grid.Row="1" Margin="5,0,5,0" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Search Results: " Background="CornflowerBlue" BorderThickness="0" />
-        <ListView Grid.Row="2" Margin="5,5,5,5">
-            <ListViewItem/>
-            <ListViewItem/>
-            <ListViewItem/>
-            <ListViewItem/>
+        <ListView Grid.Row="2" Margin="5,5,5,5" ItemsSource="{Binding SearchResult}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -97,28 +70,28 @@
                     <GridViewColumn Header="Title">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Center" Text="The Lord of the Rings"></TextBlock>
+                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Left" Text="{Binding Title}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Author">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Center" Text="J.R.R. Tolkien"></TextBlock>
+                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Left" Text="{Binding Author}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="First published">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Center" Text="1234"></TextBlock>
+                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Left" Text="{Binding FirstPublished}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Editions">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Center" Text="12"></TextBlock>
+                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Left" Text="{Binding NumberOfEditions}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

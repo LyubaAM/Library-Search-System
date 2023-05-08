@@ -1,29 +1,37 @@
-﻿using Newtonsoft.Json;
+﻿using Library_Search.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Library_Search.DataAccess
+namespace Library_Search.Services
 {
-    public class HttpDataAccess
+    public class BookPrepHttpClient : HttpClient
     {
-        public static readonly HttpClient client = new HttpClient();
+        public const string BASE_URI = "https://openlibrary.org/";
+        public const string BOOK_URL = "books/[OLID].json";
+        public const string COVER_URL = "b/olid/[OLID]-L.jpg";
+        public const string SEARCH_URL = "search.json?";
+        public const string PARAM_AUTHOR = "author=";
+        public const string PARAM_TITLE = "title=";
+        public const string PARAM_QUERY = "q=";
 
-        public static async Task<Models.Books> GetStringAsync(string path)
+        private readonly HttpClient _client;
+
+        public BookPrepHttpClient(HttpClient client) 
         {
-            //Models.Books str = null;
+            _client = client;
+            this.BaseAddress = new Uri(BASE_URI);
+        }
 
-            HttpResponseMessage response = await client.GetAsync(path);
+        public async Task<T> GetAsync<T> (string uri)
+        {
+            HttpResponseMessage response = await GetAsync(uri);
 
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    str = await response.Content.ReadAsStringAsync();
-            //}
 
             if (response.Content is object && response.Content.Headers.ContentType.MediaType == "application/json")
             {
@@ -36,7 +44,7 @@ namespace Library_Search.DataAccess
 
                 try
                 {
-                    return serializer.Deserialize<Models.Books>(jsonReader);
+                    return serializer.Deserialize<T>(jsonReader);
                 }
                 catch (JsonReaderException)
                 {
@@ -48,7 +56,7 @@ namespace Library_Search.DataAccess
                 Console.WriteLine("HTTP Response was invalid and cannot be deserialised.");
             }
 
-            return null;
+            return default(T);
         }
     }
 }

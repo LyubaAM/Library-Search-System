@@ -1,5 +1,4 @@
-﻿using Library_Search.DataAccess;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,13 +24,5 @@ namespace Library_Search
         {
             InitializeComponent();
         }
-
-        //private async void btnSearch_Click(object sender, RoutedEventArgs e)
-        //{
-        //    int cmbSelectedIndex = cmbSearchCriteria.SelectedIndex;
-        //    Models.Books result = await HttpDataAccess.GetStringAsync("https://openlibrary.org/search.json?title=the+lord+of+the+rings");
-
-        //    int i = 4;
-        //}
     }
 }

@@ -10,9 +10,7 @@
 
   <ItemGroup>
     <Folder Include="Docs\" />
-    <Folder Include="Commands\" />
     <Folder Include="Stores\" />
-    <Folder Include="ViewModels\" />
     <Folder Include="Tests\" />
   </ItemGroup>
 

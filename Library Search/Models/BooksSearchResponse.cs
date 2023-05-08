@@ -7,10 +7,18 @@ using System.Threading.Tasks;
 
 namespace Library_Search.Models
 {
+    public class BooksSearchResponse
+    {
+        public int numFound { get; set; }
+        public int start { get; set; }
+        public bool numFoundExact { get; set; }
+        public List<Doc> docs { get; set; }
+        public int num_found { get; set; }
+        public string q { get; set; }
+        public object offset { get; set; }
+    }
     public class Doc
     {
-        //book cover, title, author, page count, publish, year and date, ISBN
-
         public string key { get; set; }
         public string type { get; set; }
         public List<string> seed { get; set; }
@@ -93,16 +101,5 @@ namespace Library_Search.Models
         public string subtitle { get; set; }
         public List<string> id_bcid { get; set; }
         public List<string> id_better_world_books { get; set; }
-    }
-
-    public class Books
-    {
-        public int numFound { get; set; }
-        public int start { get; set; }
-        public bool numFoundExact { get; set; }
-        public List<Doc> docs { get; set; }
-        public int num_found { get; set; }
-        public string q { get; set; }
-        public object offset { get; set; }
     }
 }
