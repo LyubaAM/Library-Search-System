@@ -11,7 +11,7 @@
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <Image x:Name="imgBookCover" Grid.Column="0" Margin="10" Source="https://covers.openlibrary.org/b/olid/OL538837M-L.jpg" VerticalAlignment="Top"/>
+        <Image x:Name="imgBookCover" Grid.Column="0" Margin="10" Source="{Binding ImgCoverSource}" VerticalAlignment="Top"/>
         <Grid Grid.Column="1" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
@@ -37,13 +37,14 @@
             <TextBlock Grid.Column="0" Grid.Row="4" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="Page count:"></TextBlock>
             <TextBlock Grid.Column="1" Grid.Row="4" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="{Binding PageCount}"></TextBlock>
             <TextBlock Grid.Column="0" Grid.Row="5" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="Publish year:"></TextBlock>
-            <TextBlock Grid.Column="1" Grid.Row="5" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="{Binding PublishYear}"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="5" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="{Binding PublishDate}"></TextBlock>
             <TextBlock Grid.Column="0" Grid.Row="6" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="ISBN 10:"></TextBlock>
             <TextBlock Grid.Column="1" Grid.Row="6" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="{Binding ISBN10}"></TextBlock>
             <TextBlock Grid.Column="0" Grid.Row="7" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="ISBN 13:"></TextBlock>
             <TextBlock Grid.Column="1" Grid.Row="7" Padding="0 0 10 0" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="14" Text="{Binding ISBN13}"></TextBlock>
             <Button Grid.Column="1" 
                     Grid.Row="8" 
+                    Command="{Binding BackToListCommand}" 
                     VerticalAlignment="Bottom" 
                     HorizontalAlignment="Right"
                     MinWidth="100" 

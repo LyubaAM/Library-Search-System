@@ -1,12 +1,14 @@
 ﻿using Library_Search.Commands;
 using Library_Search.Models;
 using Library_Search.Services;
+using Library_Search.Stores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Library_Search.ViewModels
@@ -28,18 +30,18 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _author;
+        private string _authors;
 
-        public string Author
+        public string Authors
         {
             get
             {
-                return _author;
+                return _authors;
             }
             set
             {
-                _author = value;
-                OnPropertyChanged(nameof(Author));
+                _authors = value;
+                OnPropertyChanged(nameof(Authors));
             }
         }
 
@@ -58,36 +60,56 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private bool _isLoading;
-        public bool IsLoading
+        private BookSearchResultViewModel _selectedBook;
+        public BookSearchResultViewModel SelectedBook 
         {
             get
             {
-                return _isLoading;
+                return _selectedBook;
             }
             set
             {
-                _isLoading = value;
-                OnPropertyChanged(nameof(IsLoading));
+                _selectedBook = value;
+                OnPropertyChanged(nameof(SelectedBook));
             }
         }
 
         public ICommand? SearchCommand { get; }
+        public ICommand? DetailsCommand { get; }
 
         private readonly ObservableCollection<BookSearchResultViewModel> _searchResult;
 
         public IEnumerable<BookSearchResultViewModel> SearchResult => _searchResult;
 
-        public SearchBooksViewModel(IBooksProvider booksProvider)
+        public SearchBooksViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<BookDetailsViewModel> bookDetailsViewNavigationService)
         {
             _searchResult = new ObservableCollection<BookSearchResultViewModel>();
 
-            _searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free", "Lois McMaster Bujold", 1988, 7, "OL538837M")));
-            _searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 1", "Lois McMaster Bujold", 1988, 7, "OL538837M")));
-            _searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 2", "Lois McMaster Bujold", 1988, 7, "OL538837M")));
-            _searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 3", "Lois McMaster Bujold", 1988, 7, "OL538837M")));
+            //List<string> authors = new List<string>
+            //{
+            //    "Lois McMaster Bujold",
+            //    "Lois McMaster Bujold",
+            //    "Lois McMaster Bujold",
+            //    "Lois McMaster Bujold"
+            //};
 
-            SearchCommand = new SearchBooksCommand(this, booksProvider);
+            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free", authors, 1988, 7, "OL538837M")));
+            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 1", authors, 1988, 7, "OL538837M")));
+            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 2", authors, 1988, 7, "OL538837M")));
+            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 3", authors, 1988, 7, "OL538837M")));
+
+            SearchCommand = new SearchBooksCommand(this, searchResultStore, booksProvider);
+            DetailsCommand = new DetailsCommand(searchResultStore, this, bookDetailsViewNavigationService, booksProvider);
+        }
+
+        public void UpdateSearchResults(IEnumerable<BookSearchResult> books)
+        {
+            _searchResult.Clear();
+            foreach (BookSearchResult book in books)
+            {
+                BookSearchResultViewModel bookViewModel = new BookSearchResultViewModel(book);
+                _searchResult.Add(bookViewModel);
+            }
         }
     }
 }

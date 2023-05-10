@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Library_Search.Commands;
+using Library_Search.Models;
+using Library_Search.Services;
+using Library_Search.Stores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +13,21 @@ namespace Library_Search.ViewModels
 {
     public class BookDetailsViewModel : ViewModelBase
     {
+        private string _imgCoverSource;
+
+        public string ImgCoverSource
+        {
+            get
+            {
+                return _imgCoverSource;
+            }
+            set
+            {
+                _imgCoverSource = value;
+                OnPropertyChanged(nameof(ImgCoverSource));
+            }
+        }
+
         private string _bookTitle;
 
         public string BookTitle
@@ -84,18 +103,18 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private int _publishYear;
+        private string _publishDate;
 
-        public int PublishYear
+        public string PublishDate
         {
             get
             {
-                return _publishYear;
+                return _publishDate;
             }
             set
             {
-                _publishYear = value;
-                OnPropertyChanged(nameof(PublishYear));
+                _publishDate = value;
+                OnPropertyChanged(nameof(PublishDate));
             }
         }
 
@@ -130,17 +149,45 @@ namespace Library_Search.ViewModels
         }
 
         public ICommand? BackToListCommand { get; }
-
-        public BookDetailsViewModel()
+        public ICommand? LoadBookDetailsCommand { get; }
+        public BookDetailsViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService)
         {
-            _bookTitle = "Falling Free";
-            _bookAuthor = "Lois McMaster Bujold";
-            _bookPublisher = "Baen Books";
-            _knownEditions = 7;
-            _pageCount = 307;
-            _publishYear = 1988;
-            _iSBN10 = "0671653989";
-            _iSBN13 = "9780671653989";
+            _imgCoverSource = BookPrepHttpClient.COVER_URL.Replace(BookPrepHttpClient.OLID_PLACEHOLDER, searchResultStore.SelectedBookOLID);
+
+            LoadBookDetailsCommand = new LoadBookDetailsCommand(this, booksProvider, searchResultStore);
+
+            BackToListCommand = new NavigateCommand<SearchBooksViewModel>(searchBooksViewNavigationService);
+
+            //BookDetailsResponse bookDetailsResponse = await booksProvider.GetBookDetails(searchResultStore.SelectedBookOLID);
+            //_bookTitle = "Falling Free";
+            //_bookAuthor = "Lois McMaster Bujold";
+            //_bookPublisher = "Baen Books";
+            //_knownEditions = 7;
+            //_pageCount = 307;
+            //_publishDate = "1988";
+            //_iSBN10 = "0671653989";
+            //_iSBN13 = "9780671653989";
         }
+
+        public static BookDetailsViewModel LoadViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService)
+        {
+            BookDetailsViewModel bookDetailsViewModel = new BookDetailsViewModel(searchResultStore, booksProvider, searchBooksViewNavigationService);
+            bookDetailsViewModel.LoadBookDetailsCommand.Execute(null);
+
+            return bookDetailsViewModel;
+        }
+
+        public void SetBookDetails(BookDetailsResponse bookDetailsResponse, int knownEditions, string authors)
+        {
+            BookTitle = bookDetailsResponse.title;
+            BookAuthor = authors;
+            BookPublisher = string.Join(", ", bookDetailsResponse.publishers);
+            KnownEditions = knownEditions;
+            PageCount = bookDetailsResponse.number_of_pages;
+            PublishDate = bookDetailsResponse.publish_date;
+            ISBN10 = bookDetailsResponse.isbn_10[0];
+            ISBN13 = bookDetailsResponse.isbn_13[0];
+        }
+
     }
 }

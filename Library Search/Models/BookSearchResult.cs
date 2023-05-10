@@ -9,7 +9,7 @@ namespace Library_Search.Models
     public class BookSearchResult
     {
         public string Title { get; }
-        public string Author { get; }
+        public string Authors { get; }
         public int FirstPublished { get; }
         public int NumberOfEditions { get; }
 
@@ -18,10 +18,10 @@ namespace Library_Search.Models
         /// </summary>
         public string OLID { get; }
 
-        public BookSearchResult(string title, string author, int firstPublished, int numberOfEditions, string oLID)
+        public BookSearchResult(string title, string authors, int firstPublished, int numberOfEditions, string oLID)
         {
             Title = title;
-            Author = author;
+            Authors = authors;
             FirstPublished = firstPublished;
             NumberOfEditions = numberOfEditions;
             OLID = oLID;

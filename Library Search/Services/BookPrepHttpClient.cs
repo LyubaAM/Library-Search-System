@@ -14,11 +14,12 @@ namespace Library_Search.Services
     {
         public const string BASE_URI = "https://openlibrary.org/";
         public const string BOOK_URL = "books/[OLID].json";
-        public const string COVER_URL = "b/olid/[OLID]-L.jpg";
+        public const string COVER_URL = "https://covers.openlibrary.org/b/olid/[OLID]-L.jpg";
         public const string SEARCH_URL = "search.json?";
         public const string PARAM_AUTHOR = "author=";
         public const string PARAM_TITLE = "title=";
         public const string PARAM_QUERY = "q=";
+        public const string OLID_PLACEHOLDER = "[OLID]";
 
         private readonly HttpClient _client;
 

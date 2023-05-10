@@ -20,7 +20,9 @@ namespace Library_Search.Services
 
         public async Task<BookDetailsResponse> GetBookDetails(string oLID)
         {
-            throw new NotImplementedException();
+            string uri = BookPrepHttpClient.BOOK_URL.Replace(BookPrepHttpClient.OLID_PLACEHOLDER, oLID);
+
+            return await _client.GetAsync<BookDetailsResponse>(uri);
         }
 
         public async Task<BooksSearchResponse> GetBooksByTitleAndAuthor(string title, string author)
@@ -30,13 +32,13 @@ namespace Library_Search.Services
             if (!string.IsNullOrEmpty(title))
             {
                 uri.Append(BookPrepHttpClient.PARAM_TITLE);
-                uri.Append(title);
+                uri.Append(title.TrimEnd().Replace(" ", "+"));
                 uri.Append('&');
             }
 
             if (!string.IsNullOrEmpty(author)) {
                 uri.Append(BookPrepHttpClient.PARAM_AUTHOR);
-                uri.Append(author);
+                uri.Append(author.TrimEnd().Replace(" ", "+"));
                 uri.Append('&');
             }
 

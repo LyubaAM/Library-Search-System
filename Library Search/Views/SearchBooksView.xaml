@@ -15,6 +15,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="0,5,0,5">
@@ -45,7 +46,7 @@
                 Margin="5,0,5,0" 
                 VerticalContentAlignment="Center" 
                 TextWrapping="Wrap" 
-                Text="{Binding Author}"
+                Text="{Binding Authors}"
                 Visibility="{Binding SelectedValue, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter=Title &amp; Author, ElementName=cmbSearchCriteria}"/>
             <TextBox 
                 Grid.Column="1" 
@@ -59,7 +60,7 @@
             <Button x:Name="btnSearch" Command="{Binding SearchCommand}" Content="Search" Grid.Column="3" Grid.Row="0" Margin="5,0,5,0" Style="{StaticResource darkBlueBtnStyle}" />
         </Grid>
         <TextBox Grid.Row="1" Margin="5,0,5,0" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Search Results: " Background="CornflowerBlue" BorderThickness="0" />
-        <ListView Grid.Row="2" Margin="5,5,5,5" ItemsSource="{Binding SearchResult}">
+        <ListView Grid.Row="2" Margin="5,5,5,5" ItemsSource="{Binding SearchResult}" SelectionMode="Single" SelectedItem="{Binding SelectedBook}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -77,7 +78,7 @@
                     <GridViewColumn Header="Author">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Left" Text="{Binding Author}"></TextBlock>
+                                <TextBlock Padding="0 0 10 0" HorizontalAlignment="Left" Text="{Binding Authors}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -98,5 +99,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button x:Name="btnDetails" Command="{Binding DetailsCommand}" Content="Details" Grid.Row="3" Margin="5" Style="{StaticResource darkBlueBtnStyle}" HorizontalAlignment="Right" VerticalAlignment="Stretch" MinWidth="100"/>
     </Grid>
 </UserControl>

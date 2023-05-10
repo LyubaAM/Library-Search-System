@@ -13,16 +13,16 @@ namespace Library_Search.Models
         public string Publisher { get; }
         public int KnownEditions { get; }
         public int PagesCount { get; }
-        public int PublishYear { get; }
-        public int ISBN10 { get; }
-        public int ISBN13 { get; }
+        public string PublishYear { get; }
+        public List<string> ISBN10 { get; }
+        public List<string> ISBN13 { get; }
 
         /// <summary>
         /// Open Library ID
         /// </summary>
         public string OLID { get; }
 
-        public BookDetails(string title, string author, string publisher, int knownEditions, int pagesCount, int publishYear, int iSBN10, int iSBN13)
+        public BookDetails(string title, string author, string publisher, int knownEditions, int pagesCount, string publishYear, List<string> iSBN10, List<string> iSBN13)
         {
             Title = title;
             Author = author;
