@@ -17,22 +17,18 @@ namespace Library_Search.Commands
     {
         private readonly SearchBooksViewModel _searchBooksViewModel;
         private readonly SearchResultStore _searchResultStore;
-        private readonly string _oLID;
-        private readonly int _knownEditions;
-        private readonly IBooksProvider _booksProvider;
         private readonly NavigationService<BookDetailsViewModel> _bookDetailsViewNavigationService;
 
-        public DetailsCommand(SearchResultStore searchResultStore, SearchBooksViewModel searchBooksViewModel, NavigationService<BookDetailsViewModel> bookDetailsViewNavigationService, IBooksProvider booksProvider)
+        public DetailsCommand(SearchResultStore searchResultStore, SearchBooksViewModel searchBooksViewModel, NavigationService<BookDetailsViewModel> bookDetailsViewNavigationService)
         {
             _searchBooksViewModel = searchBooksViewModel;
             _searchResultStore = searchResultStore;
             _bookDetailsViewNavigationService = bookDetailsViewNavigationService;
-            _booksProvider = booksProvider;
         }
 
         public override void Execute(object parameter)
         {
-            _searchResultStore.SetSelectedBookDetails(_searchBooksViewModel.SelectedBook.OLID, _searchBooksViewModel.SelectedBook.NumberOfEditions, _searchBooksViewModel.SelectedBook.Authors);
+            _searchResultStore.SetSelectedBookDetails(_searchBooksViewModel.SelectedBook);
             _bookDetailsViewNavigationService.Navigate();
         }
     }

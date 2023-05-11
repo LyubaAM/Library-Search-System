@@ -17,6 +17,8 @@ namespace Library_Search
     /// </summary>
     public partial class App : Application
     {
+        public const string BASE_URI = "https://openlibrary.org/";
+
         private readonly HttpClient _httpClient;
         private readonly IBooksProvider _booksProvider;
         private readonly BookPrepHttpClient _bookPrepHttpClient;
@@ -27,6 +29,8 @@ namespace Library_Search
         public App()
         {
             _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri(BASE_URI);
+
             _bookPrepHttpClient = new BookPrepHttpClient(_httpClient);
             _booksProvider = new BooksProvider(_bookPrepHttpClient);
 
@@ -49,12 +53,12 @@ namespace Library_Search
 
         private SearchBooksViewModel CreateSearchBooksViewModel()
         {
-            return new SearchBooksViewModel(_searchResultStore, _booksProvider, new NavigationService<BookDetailsViewModel>(_booksProvider, _navigationStore, CreateBookDetailsViewModel));
+            return new SearchBooksViewModel(_searchResultStore, _booksProvider, new NavigationService<BookDetailsViewModel>(_navigationStore, CreateBookDetailsViewModel));
         }
 
         private BookDetailsViewModel CreateBookDetailsViewModel()
         {
-            return BookDetailsViewModel.LoadViewModel(_searchResultStore, _booksProvider, new NavigationService<SearchBooksViewModel>(_booksProvider, _navigationStore, CreateSearchBooksViewModel));
+            return BookDetailsViewModel.LoadViewModel(_searchResultStore, _booksProvider, new NavigationService<SearchBooksViewModel>(_navigationStore, CreateSearchBooksViewModel));
         }
     }
 }

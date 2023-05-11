@@ -12,13 +12,11 @@ namespace Library_Search.Services
     {
         private readonly NavigationStore _navigationStore;
         private readonly Func<TViewModel> _createViewModel;
-        private readonly IBooksProvider _booksProvider;
 
-        public NavigationService(IBooksProvider booksProvider, NavigationStore navigationStore, Func<TViewModel> createViewModel)
+        public NavigationService(NavigationStore navigationStore, Func<TViewModel> createViewModel)
         {
             _navigationStore = navigationStore;
             _createViewModel = createViewModel;
-            _booksProvider = booksProvider;
         }
 
         public void Navigate()

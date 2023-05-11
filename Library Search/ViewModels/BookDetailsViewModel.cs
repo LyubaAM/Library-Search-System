@@ -28,9 +28,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _bookTitle;
+        private string? _bookTitle;
 
-        public string BookTitle
+        public string? BookTitle
         {
             get
             {
@@ -43,9 +43,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _bookAuthor;
+        private string? _bookAuthor;
 
-        public string BookAuthor
+        public string? BookAuthor
         {
             get
             {
@@ -58,9 +58,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _bookPublisher;
+        private string? _bookPublisher;
 
-        public string BookPublisher
+        public string? BookPublisher
         {
             get
             {
@@ -103,9 +103,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _publishDate;
+        private string? _publishDate;
 
-        public string PublishDate
+        public string? PublishDate
         {
             get
             {
@@ -118,9 +118,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _iSBN10;
+        private string? _iSBN10;
 
-        public string ISBN10
+        public string? ISBN10
         {
             get
             {
@@ -133,9 +133,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _iSBN13;
+        private string? _iSBN13;
 
-        public string ISBN13
+        public string? ISBN13
         {
             get
             {
@@ -149,24 +149,13 @@ namespace Library_Search.ViewModels
         }
 
         public ICommand? BackToListCommand { get; }
-        public ICommand? LoadBookDetailsCommand { get; }
+        public ICommand LoadBookDetailsCommand { get; }
         public BookDetailsViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService)
         {
-            _imgCoverSource = BookPrepHttpClient.COVER_URL.Replace(BookPrepHttpClient.OLID_PLACEHOLDER, searchResultStore.SelectedBookOLID);
+            _imgCoverSource = BookPrepHttpClient.COVER_URL.Replace(BookPrepHttpClient.OLID_PLACEHOLDER, searchResultStore.SelectedBook.OLID);
 
             LoadBookDetailsCommand = new LoadBookDetailsCommand(this, booksProvider, searchResultStore);
-
             BackToListCommand = new NavigateCommand<SearchBooksViewModel>(searchBooksViewNavigationService);
-
-            //BookDetailsResponse bookDetailsResponse = await booksProvider.GetBookDetails(searchResultStore.SelectedBookOLID);
-            //_bookTitle = "Falling Free";
-            //_bookAuthor = "Lois McMaster Bujold";
-            //_bookPublisher = "Baen Books";
-            //_knownEditions = 7;
-            //_pageCount = 307;
-            //_publishDate = "1988";
-            //_iSBN10 = "0671653989";
-            //_iSBN13 = "9780671653989";
         }
 
         public static BookDetailsViewModel LoadViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService)
@@ -185,9 +174,8 @@ namespace Library_Search.ViewModels
             KnownEditions = knownEditions;
             PageCount = bookDetailsResponse.number_of_pages;
             PublishDate = bookDetailsResponse.publish_date;
-            ISBN10 = bookDetailsResponse.isbn_10[0];
-            ISBN13 = bookDetailsResponse.isbn_13[0];
+            ISBN10 = bookDetailsResponse.isbn_10.FirstOrDefault();
+            ISBN13 = bookDetailsResponse.isbn_13.FirstOrDefault();
         }
-
     }
 }

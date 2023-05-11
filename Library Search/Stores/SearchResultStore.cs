@@ -14,19 +14,16 @@ namespace Library_Search.Stores
     {
         private readonly List<BookSearchResult> _searchResults;
         private readonly IBooksProvider _booksProvider;
-        private string _title;
-        private string _author;
-        private string _selectedBookOLID;
-        private int _selectedBookKnownEditions;
-        private string _selectedBookAuthors;
+        private string? _title;
+        private string? _author;
+        private string? _advancedSearch;
+        private BookSearchResultViewModel? _selectedBook;
 
         public IEnumerable<BookSearchResult> SearchResults => _searchResults;
-        public string Title => _title;
-        public string Author => _author;
-        public string SelectedBookOLID => _selectedBookOLID;
-        public int SelectedBookKnownEditions => _selectedBookKnownEditions;
-
-        public string SelectedBookAuthors => _selectedBookAuthors;
+        public string? Title => _title;
+        public string? Author => _author;
+        public string? AdvancedSearch => _advancedSearch;        
+        public BookSearchResultViewModel? SelectedBook => _selectedBook;
 
         public SearchResultStore(IBooksProvider booksProvider)
         {
@@ -50,11 +47,9 @@ namespace Library_Search.Stores
             }
         }
 
-        public void SetSelectedBookDetails(string oLID, int numberOfEditions, string authors)
+        public void SetSelectedBookDetails(BookSearchResultViewModel selectedBook)
         {
-            _selectedBookOLID = oLID;
-            _selectedBookKnownEditions = numberOfEditions;
-            _selectedBookAuthors = authors;
+            _selectedBook = selectedBook;
         }
     }
 }

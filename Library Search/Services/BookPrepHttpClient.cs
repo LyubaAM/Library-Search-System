@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace Library_Search.Services
 {
-    public class BookPrepHttpClient : HttpClient
+    public class BookPrepHttpClient
     {
-        public const string BASE_URI = "https://openlibrary.org/";
         public const string BOOK_URL = "books/[OLID].json";
         public const string COVER_URL = "https://covers.openlibrary.org/b/olid/[OLID]-L.jpg";
         public const string SEARCH_URL = "search.json?";
@@ -26,13 +25,11 @@ namespace Library_Search.Services
         public BookPrepHttpClient(HttpClient client) 
         {
             _client = client;
-            this.BaseAddress = new Uri(BASE_URI);
         }
 
         public async Task<T> GetAsync<T> (string uri)
         {
-            HttpResponseMessage response = await GetAsync(uri);
-
+            HttpResponseMessage response = await _client.GetAsync(uri);
 
             if (response.Content is object && response.Content.Headers.ContentType.MediaType == "application/json")
             {

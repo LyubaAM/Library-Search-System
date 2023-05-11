@@ -30,18 +30,18 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _authors;
+        private string _author;
 
-        public string Authors
+        public string Author
         {
             get
             {
-                return _authors;
+                return _author;
             }
             set
             {
-                _authors = value;
-                OnPropertyChanged(nameof(Authors));
+                _author = value;
+                OnPropertyChanged(nameof(Author));
             }
         }
 
@@ -61,7 +61,7 @@ namespace Library_Search.ViewModels
         }
 
         private BookSearchResultViewModel _selectedBook;
-        public BookSearchResultViewModel SelectedBook 
+        public BookSearchResultViewModel SelectedBook
         {
             get
             {
@@ -85,21 +85,17 @@ namespace Library_Search.ViewModels
         {
             _searchResult = new ObservableCollection<BookSearchResultViewModel>();
 
-            //List<string> authors = new List<string>
-            //{
-            //    "Lois McMaster Bujold",
-            //    "Lois McMaster Bujold",
-            //    "Lois McMaster Bujold",
-            //    "Lois McMaster Bujold"
-            //};
+            SearchCommand = new SearchBooksCommand(this, searchResultStore);
+            DetailsCommand = new DetailsCommand(searchResultStore, this, bookDetailsViewNavigationService);
 
-            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free", authors, 1988, 7, "OL538837M")));
-            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 1", authors, 1988, 7, "OL538837M")));
-            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 2", authors, 1988, 7, "OL538837M")));
-            //_searchResult.Add(new BookSearchResultViewModel(new BookSearchResult("Falling Free 3", authors, 1988, 7, "OL538837M")));
-
-            SearchCommand = new SearchBooksCommand(this, searchResultStore, booksProvider);
-            DetailsCommand = new DetailsCommand(searchResultStore, this, bookDetailsViewNavigationService, booksProvider);
+            _title = searchResultStore.Title;
+            _author = searchResultStore.Author;
+            _advancedSearch = searchResultStore.AdvancedSearch;
+            UpdateSearchResults(searchResultStore.SearchResults);
+            if(searchResultStore.SelectedBook != null)
+            {
+                _selectedBook = _searchResult.Where(s => s.OLID == searchResultStore.SelectedBook.OLID).FirstOrDefault();
+            }
         }
 
         public void UpdateSearchResults(IEnumerable<BookSearchResult> books)

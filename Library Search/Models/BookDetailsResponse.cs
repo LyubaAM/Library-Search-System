@@ -8,7 +8,7 @@ namespace Library_Search.Models
 {
     public class BookDetailsResponse
     {
-        public Notes notes { get; set; }
+        //public Notes notes { get; set; }
         public Identifiers identifiers { get; set; }
         public string title { get; set; }
         public List<Author> authors { get; set; }

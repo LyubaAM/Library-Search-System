@@ -25,6 +25,23 @@
                     <Setter Property="Background" Value="LightSteelBlue"/>
                     <Setter Property="Foreground" Value="DarkSlateBlue"/>
                 </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="Background" Value="LightSteelBlue"/>
+                    <Setter Property="Foreground" Value="DarkSlateBlue"/>
+                    <Setter Property="FocusVisualStyle">
+                        <Setter.Value>
+                            <Style>
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Rectangle StrokeThickness="0"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
             </Style.Triggers>
         </Style>
     </Application.Resources>

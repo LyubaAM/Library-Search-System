@@ -16,7 +16,6 @@ namespace Library_Search.Commands
         private readonly SearchResultStore _searchResultStore;
         private readonly IBooksProvider _booksProvider;
 
-        //LoadBookDetailsCommand(this, booksProvider, searchResultStore)
         public LoadBookDetailsCommand(BookDetailsViewModel bookDetailsViewModel, IBooksProvider booksProvider, SearchResultStore searchResultStore)
         {
             _booksProvider = booksProvider;
@@ -27,12 +26,13 @@ namespace Library_Search.Commands
         {
             try
             {
-                BookDetailsResponse bookDetailsResponse = await _booksProvider.GetBookDetails(_searchResultStore.SelectedBookOLID);
-                _bookDetailsViewModel.SetBookDetails(bookDetailsResponse, _searchResultStore.SelectedBookKnownEditions, _searchResultStore.SelectedBookAuthors);
+                BookDetailsResponse bookDetailsResponse = await _booksProvider.GetBookDetails(_searchResultStore.SelectedBook.OLID);
+                _bookDetailsViewModel.SetBookDetails(bookDetailsResponse, _searchResultStore.SelectedBook.NumberOfEditions, _searchResultStore.SelectedBook.Authors);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //To_Do error messages
+                Console.WriteLine(e.Message);
             }
         }
     }
