@@ -2,6 +2,7 @@
 using Library_Search.Services;
 using Library_Search.Stores;
 using Library_Search.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace Library_Search.Commands
         private readonly BookDetailsViewModel _bookDetailsViewModel;
         private readonly SearchResultStore _searchResultStore;
         private readonly IBooksProvider _booksProvider;
+        // create a static logger field
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public LoadBookDetailsCommand(BookDetailsViewModel bookDetailsViewModel, IBooksProvider booksProvider, SearchResultStore searchResultStore)
         {
@@ -29,10 +32,10 @@ namespace Library_Search.Commands
                 BookDetailsResponse bookDetailsResponse = await _booksProvider.GetBookDetails(_searchResultStore.SelectedBook.OLID);
                 _bookDetailsViewModel.SetBookDetails(bookDetailsResponse, _searchResultStore.SelectedBook.NumberOfEditions, _searchResultStore.SelectedBook.Authors);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 //To_Do error messages
-                Console.WriteLine(e.Message);
+                logger.Error(ex, "Failed to load BookDetailsViewModel in LoadBookDetailsCommand.");
             }
         }
     }

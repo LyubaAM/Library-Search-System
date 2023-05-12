@@ -1,6 +1,7 @@
 ﻿using Library_Search.Services;
 using Library_Search.Stores;
 using Library_Search.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,8 +24,7 @@ namespace Library_Search
         private readonly IBooksProvider _booksProvider;
         private readonly BookPrepHttpClient _bookPrepHttpClient;
         private readonly SearchResultStore _searchResultStore;
-
-        private readonly NavigationStore _navigationStore;
+        private readonly NavigationStore _navigationStore;        
 
         public App()
         {

@@ -47,7 +47,15 @@ namespace Library_Search.Services
 
         public async Task<BooksSearchResponse> GetBooksByQuery(string query)
         {
-            throw new NotImplementedException();
+            StringBuilder uri = new StringBuilder(BookPrepHttpClient.SEARCH_URL);
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                uri.Append(BookPrepHttpClient.PARAM_QUERY);
+                uri.Append(query.TrimEnd().Replace(" ", "+"));
+            }
+
+            return await _client.GetAsync<BooksSearchResponse>(uri.ToString());
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library_Search.Enums;
 
 namespace Library_Search.Commands
 {
@@ -25,12 +26,21 @@ namespace Library_Search.Commands
         {
             try
             {
-                await _searchResultStore.LoadBooksByTitleAndAuthor(_searchBooksViewModel.Title, _searchBooksViewModel.Author);
-                _searchBooksViewModel.UpdateSearchResults(_searchResultStore.SearchResults);
+                if(_searchBooksViewModel.SelectedSearchCriteria.Equals(SearchCriteriaEnum.TitleAuthor))
+                {
+                    await _searchResultStore.LoadBooksByTitleAndAuthor(_searchBooksViewModel.Title, _searchBooksViewModel.Author);
+                    _searchBooksViewModel.UpdateSearchResults(_searchResultStore.SearchResultsStore);
+                }
+                else if(_searchBooksViewModel.SelectedSearchCriteria.Equals(SearchCriteriaEnum.AdvancedSearch))
+                {
+                    await _searchResultStore.LoadBooksByQuery(_searchBooksViewModel.AdvancedSearch);
+                    _searchBooksViewModel.UpdateSearchResults(_searchResultStore.SearchResultsStore);
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-               //To_Do error messages
+                //To_Do error messages
+                throw;
             }
         }
     }

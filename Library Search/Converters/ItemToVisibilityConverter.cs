@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows;
+using System.Windows.Media.TextFormatting;
+using Library_Search.Enums;
 
 namespace Library_Search.Converters
 {
@@ -13,12 +15,16 @@ namespace Library_Search.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //Make the required checks here. if you content is comboboxitem or something you have to make the conversion here.
-            //((System.Windows.Controls.ContentControl)value).Content.Equals(parameter.ToString())
-            if (((System.Windows.Controls.ContentControl)value).Content.Equals(parameter.ToString()))
-                return Visibility.Visible;
-
-            return Visibility.Collapsed;
+            try
+            {
+                if (((SearchCriteriaEnum)value).Equals((SearchCriteriaEnum)parameter)) 
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

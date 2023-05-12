@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Library_Search.Views"
              xmlns:converters="clr-namespace:Library_Search.Converters"
+             xmlns:enums="clr-namespace:Library_Search.Enums"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -28,10 +29,21 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <ComboBox x:Name="cmbSearchCriteria" Grid.Column="0" Grid.Row="0" Margin="5,0,5,0" VerticalContentAlignment="Center">
+            <!--<ComboBox x:Name="cmbSearchCriteria"
+                      Grid.Column="0" 
+                      Grid.Row="0" 
+                      Margin="5,0,5,0" 
+                      VerticalContentAlignment="Center" >
                 <ComboBoxItem IsSelected="True" ToolTip="Title &amp; Author">Title &amp; Author</ComboBoxItem>
                 <ComboBoxItem >Advanced Search</ComboBoxItem>
-            </ComboBox>
+            </ComboBox>-->
+            <ComboBox x:Name="cmbSearchCriteria"
+                      Grid.Column="0" 
+                      Grid.Row="0" 
+                      Margin="5,0,5,0" 
+                      VerticalContentAlignment="Center" 
+                      ItemsSource="{Binding Source={enums:EnumBindingSource {x:Type enums:SearchCriteriaEnum}}}"
+                      SelectedItem="{Binding SelectedSearchCriteria}"/>
             <TextBox 
                 Grid.Column="1" 
                 Grid.Row="0" 
@@ -39,7 +51,7 @@
                 VerticalContentAlignment="Center" 
                 TextWrapping="Wrap" 
                 Text="{Binding Title}"
-                Visibility="{Binding SelectedItem, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter=Title &amp; Author, ElementName=cmbSearchCriteria}"/>
+                Visibility="{Binding SelectedSearchCriteria, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter={x:Static enums:SearchCriteriaEnum.TitleAuthor}}"/>
             <TextBox 
                 Grid.Column="2" 
                 Grid.Row="0" 
@@ -47,7 +59,7 @@
                 VerticalContentAlignment="Center" 
                 TextWrapping="Wrap" 
                 Text="{Binding Author}"
-                Visibility="{Binding SelectedValue, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter=Title &amp; Author, ElementName=cmbSearchCriteria}"/>
+                Visibility="{Binding SelectedSearchCriteria, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter={x:Static enums:SearchCriteriaEnum.TitleAuthor}}"/>
             <TextBox 
                 Grid.Column="1" 
                 Grid.Row="0" 
@@ -56,7 +68,7 @@
                 VerticalContentAlignment="Center" 
                 TextWrapping="Wrap" 
                 Text="{Binding AdvancedSearch}" 
-                Visibility="{Binding SelectedValue, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter='Advanced Search', ElementName=cmbSearchCriteria}"/>
+                Visibility="{Binding SelectedSearchCriteria, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter={x:Static enums:SearchCriteriaEnum.AdvancedSearch}}"/>
             <Button x:Name="btnSearch" Command="{Binding SearchCommand}" Content="Search" Grid.Column="3" Grid.Row="0" Margin="5,0,5,0" Style="{StaticResource darkBlueBtnStyle}" />
         </Grid>
         <TextBox Grid.Row="1" Margin="5,0,5,0" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Search Results: " Background="CornflowerBlue" BorderThickness="0" />

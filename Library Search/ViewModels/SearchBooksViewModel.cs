@@ -1,4 +1,5 @@
 ﻿using Library_Search.Commands;
+using Library_Search.Enums;
 using Library_Search.Models;
 using Library_Search.Services;
 using Library_Search.Stores;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -74,6 +76,20 @@ namespace Library_Search.ViewModels
             }
         }
 
+        private SearchCriteriaEnum _selectedSearchCriteria;
+        public SearchCriteriaEnum SelectedSearchCriteria
+        {
+            get
+            {
+                return _selectedSearchCriteria;
+            }
+            set
+            {
+                _selectedSearchCriteria = value;
+                OnPropertyChanged(nameof(SelectedSearchCriteria));
+            }
+        }
+
         public ICommand? SearchCommand { get; }
         public ICommand? DetailsCommand { get; }
 
@@ -84,6 +100,7 @@ namespace Library_Search.ViewModels
         public SearchBooksViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<BookDetailsViewModel> bookDetailsViewNavigationService)
         {
             _searchResult = new ObservableCollection<BookSearchResultViewModel>();
+            _selectedSearchCriteria = SearchCriteriaEnum.TitleAuthor;
 
             SearchCommand = new SearchBooksCommand(this, searchResultStore);
             DetailsCommand = new DetailsCommand(searchResultStore, this, bookDetailsViewNavigationService);
@@ -91,7 +108,7 @@ namespace Library_Search.ViewModels
             _title = searchResultStore.Title;
             _author = searchResultStore.Author;
             _advancedSearch = searchResultStore.AdvancedSearch;
-            UpdateSearchResults(searchResultStore.SearchResults);
+            UpdateSearchResults(searchResultStore.SearchResultsStore);
             if(searchResultStore.SelectedBook != null)
             {
                 _selectedBook = _searchResult.Where(s => s.OLID == searchResultStore.SelectedBook.OLID).FirstOrDefault();

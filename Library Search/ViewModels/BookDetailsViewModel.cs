@@ -168,14 +168,21 @@ namespace Library_Search.ViewModels
 
         public void SetBookDetails(BookDetailsResponse bookDetailsResponse, int knownEditions, string authors)
         {
-            BookTitle = bookDetailsResponse.title;
-            BookAuthor = authors;
-            BookPublisher = string.Join(", ", bookDetailsResponse.publishers);
-            KnownEditions = knownEditions;
-            PageCount = bookDetailsResponse.number_of_pages;
-            PublishDate = bookDetailsResponse.publish_date;
-            ISBN10 = bookDetailsResponse.isbn_10.FirstOrDefault();
-            ISBN13 = bookDetailsResponse.isbn_13.FirstOrDefault();
+            try
+            {
+                BookTitle = bookDetailsResponse.title;
+                BookAuthor = authors;
+                BookPublisher = bookDetailsResponse.publishers != null ? string.Join(", ", bookDetailsResponse.publishers) : "";
+                KnownEditions = knownEditions;
+                PageCount = bookDetailsResponse.number_of_pages;
+                PublishDate = bookDetailsResponse.publish_date;
+                ISBN10 = bookDetailsResponse.isbn_10.FirstOrDefault();
+                ISBN13 = bookDetailsResponse.isbn_13.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
