@@ -1,12 +1,14 @@
 ﻿using Library_Search.Models;
 using Library_Search.Services;
 using Library_Search.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Library_Search.Stores
 {
@@ -18,13 +20,17 @@ namespace Library_Search.Stores
         private string? _author;
         private string? _query;
         private string? _advancedSearch;
+        private int _numResultsFound;
         private BookSearchResultViewModel? _selectedBook;
+        // create a static logger field
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public IEnumerable<BookSearchResult> SearchResultsStore => _searchResultsStore;
         public string? Title => _title;
         public string? Author => _author;
         public string? Query => _query;
         public string? AdvancedSearch => _advancedSearch;        
+        public int NumResultsFound => _numResultsFound;
         public BookSearchResultViewModel? SelectedBook => _selectedBook;
 
         public SearchResultStore(IBooksProvider booksProvider)
@@ -33,7 +39,7 @@ namespace Library_Search.Stores
             _booksProvider = booksProvider;
         }
 
-        public async Task LoadBooksByTitleAndAuthor(string title, string author)
+        public async Task LoadBooksByTitleAndAuthor(string? title, string? author)
         {
             _title = title;
             _author = author;
@@ -43,7 +49,7 @@ namespace Library_Search.Stores
             UpdateSearchResultsStore(booksResponse);
         }
 
-        public async Task LoadBooksByQuery(string query)
+        public async Task LoadBooksByQuery(string? query)
         {
             _query = query;
 
@@ -63,6 +69,9 @@ namespace Library_Search.Stores
 
             try
             {
+                logger.Info("Parsing search results. Number of results: '{0}'.", booksResponse.numFound);
+
+                _numResultsFound = booksResponse.numFound;
                 foreach (Doc doc in booksResponse.docs)
                 {
                     BookSearchResult book = new BookSearchResult(doc.title,
@@ -72,10 +81,13 @@ namespace Library_Search.Stores
                         doc.cover_edition_key != null ? doc.cover_edition_key : doc.edition_key.First());
                     _searchResultsStore.Add(book);
                 }
+                logger.Info("Search response parsed.");
             }
             catch (Exception ex)
             {
-                throw;
+                string message = "Failed to parse search response.";
+                logger.Error(ex, message);
+                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -2,17 +2,22 @@
 using Library_Search.Models;
 using Library_Search.Services;
 using Library_Search.Stores;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Library_Search.ViewModels
 {
     public class BookDetailsViewModel : ViewModelBase
     {
+        // create a static logger field
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private string _imgCoverSource;
 
         public string ImgCoverSource
@@ -170,6 +175,8 @@ namespace Library_Search.ViewModels
         {
             try
             {
+                logger.Info("Parsing book details response.");
+
                 BookTitle = bookDetailsResponse.title;
                 BookAuthor = authors;
                 BookPublisher = bookDetailsResponse.publishers != null ? string.Join(", ", bookDetailsResponse.publishers) : "";
@@ -178,10 +185,14 @@ namespace Library_Search.ViewModels
                 PublishDate = bookDetailsResponse.publish_date;
                 ISBN10 = bookDetailsResponse.isbn_10.FirstOrDefault();
                 ISBN13 = bookDetailsResponse.isbn_13.FirstOrDefault();
+
+                logger.Info("Book details response parsed.");
             }
             catch (Exception ex)
             {
-                throw;
+                string message = "Failed to parse book details response.";
+                logger.Error(ex, message);
+                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -60,5 +60,11 @@ namespace Library_Search
         {
             return BookDetailsViewModel.LoadViewModel(_searchResultStore, _booksProvider, new NavigationService<SearchBooksViewModel>(_navigationStore, CreateSearchBooksViewModel));
         }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("An unhandled exception just occurred: " + e.Exception.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            e.Handled = true;
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Library_Search.Models;
+using Library_Search.Stores;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Library_Search.Services
 {
@@ -21,6 +24,8 @@ namespace Library_Search.Services
         public const string OLID_PLACEHOLDER = "[OLID]";
 
         private readonly HttpClient _client;
+        // create a static logger field
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public BookPrepHttpClient(HttpClient client) 
         {
@@ -29,7 +34,10 @@ namespace Library_Search.Services
 
         public async Task<T> GetAsync<T> (string uri)
         {
+            logger.Info("Get HTTP response uri: {0}.", uri);
+
             HttpResponseMessage response = await _client.GetAsync(uri);
+            string message = "";
 
             if (response.Content is object && response.Content.Headers.ContentType.MediaType == "application/json")
             {
@@ -44,14 +52,18 @@ namespace Library_Search.Services
                 {
                     return serializer.Deserialize<T>(jsonReader);
                 }
-                catch (JsonReaderException)
+                catch (JsonReaderException ex)
                 {
-                    Console.WriteLine("Invalid JSON.");
+                    message = "Invalid JSON.";
+                    logger.Error(ex, message);
+                    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); ;
                 }
             }
             else
             {
-                Console.WriteLine("HTTP Response was invalid and cannot be deserialised.");
+                message = "HTTP Response was invalid and cannot be deserialised.";
+                logger.Error(message);
+                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return default(T);

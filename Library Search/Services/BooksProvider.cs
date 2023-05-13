@@ -25,7 +25,7 @@ namespace Library_Search.Services
             return await _client.GetAsync<BookDetailsResponse>(uri);
         }
 
-        public async Task<BooksSearchResponse> GetBooksByTitleAndAuthor(string title, string author)
+        public async Task<BooksSearchResponse> GetBooksByTitleAndAuthor(string? title, string? author)
         {
             StringBuilder uri = new StringBuilder(BookPrepHttpClient.SEARCH_URL);
 
@@ -45,7 +45,7 @@ namespace Library_Search.Services
             return await _client.GetAsync<BooksSearchResponse>(uri.ToString().TrimEnd('&'));
         }
 
-        public async Task<BooksSearchResponse> GetBooksByQuery(string query)
+        public async Task<BooksSearchResponse> GetBooksByQuery(string? query)
         {
             StringBuilder uri = new StringBuilder(BookPrepHttpClient.SEARCH_URL);
 

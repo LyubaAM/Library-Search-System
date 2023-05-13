@@ -29,14 +29,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <!--<ComboBox x:Name="cmbSearchCriteria"
-                      Grid.Column="0" 
-                      Grid.Row="0" 
-                      Margin="5,0,5,0" 
-                      VerticalContentAlignment="Center" >
-                <ComboBoxItem IsSelected="True" ToolTip="Title &amp; Author">Title &amp; Author</ComboBoxItem>
-                <ComboBoxItem >Advanced Search</ComboBoxItem>
-            </ComboBox>-->
             <ComboBox x:Name="cmbSearchCriteria"
                       Grid.Column="0" 
                       Grid.Row="0" 
@@ -71,8 +63,11 @@
                 Visibility="{Binding SelectedSearchCriteria, Converter={StaticResource itemToVisibilityConverter}, ConverterParameter={x:Static enums:SearchCriteriaEnum.AdvancedSearch}}"/>
             <Button x:Name="btnSearch" Command="{Binding SearchCommand}" Content="Search" Grid.Column="3" Grid.Row="0" Margin="5,0,5,0" Style="{StaticResource darkBlueBtnStyle}" />
         </Grid>
-        <TextBox Grid.Row="1" Margin="5,0,5,0" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Search Results: " Background="CornflowerBlue" BorderThickness="0" />
-        <ListView Grid.Row="2" Margin="5,5,5,5" ItemsSource="{Binding SearchResult}" SelectionMode="Single" SelectedItem="{Binding SelectedBook}">
+        <StackPanel Grid.Row="1" Margin="5,0,5,0" Orientation="Horizontal">
+            <TextBox VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Search Results: " Background="CornflowerBlue" BorderThickness="0" />
+            <TextBox VerticalContentAlignment="Center" TextWrapping="Wrap" Text="{Binding NumResultsFound}" Background="CornflowerBlue" BorderThickness="0" />
+        </StackPanel>
+        <ListView x:Name="lstSearchResult" Grid.Row="2" Margin="5,5,5,5" ItemsSource="{Binding SearchResult}" SelectionMode="Single" SelectedItem="{Binding SelectedBook}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -111,6 +106,23 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="btnDetails" Command="{Binding DetailsCommand}" Content="Details" Grid.Row="3" Margin="5" Style="{StaticResource darkBlueBtnStyle}" HorizontalAlignment="Right" VerticalAlignment="Stretch" MinWidth="100"/>
+        <Button x:Name="btnDetails" 
+                Command="{Binding DetailsCommand}" 
+                Content="Details" 
+                Grid.Row="3" 
+                Margin="5" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Stretch" 
+                MinWidth="100">
+            <Button.Style>
+                <Style BasedOn="{StaticResource darkBlueBtnStyle}" TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=lstSearchResult, Path=SelectedIndex}" Value="-1">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </UserControl>

@@ -17,9 +17,9 @@ namespace Library_Search.ViewModels
 {
     public class SearchBooksViewModel : ViewModelBase
     {
-        private string _title;
+        private string? _title;
 
-        public string Title
+        public string? Title
         {
             get
             {
@@ -32,9 +32,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _author;
+        private string? _author;
 
-        public string Author
+        public string? Author
         {
             get
             {
@@ -47,9 +47,9 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private string _advancedSearch;
+        private string? _advancedSearch;
 
-        public string AdvancedSearch
+        public string? AdvancedSearch
         {
             get
             {
@@ -62,8 +62,23 @@ namespace Library_Search.ViewModels
             }
         }
 
-        private BookSearchResultViewModel _selectedBook;
-        public BookSearchResultViewModel SelectedBook
+        private int _numResultsFound;
+
+        public int NumResultsFound
+        {
+            get
+            {
+                return _numResultsFound;
+            }
+            set
+            {
+                _numResultsFound = value;
+                OnPropertyChanged(nameof(NumResultsFound));
+            }
+        }
+
+        private BookSearchResultViewModel? _selectedBook;
+        public BookSearchResultViewModel? SelectedBook
         {
             get
             {
@@ -108,15 +123,18 @@ namespace Library_Search.ViewModels
             _title = searchResultStore.Title;
             _author = searchResultStore.Author;
             _advancedSearch = searchResultStore.AdvancedSearch;
-            UpdateSearchResults(searchResultStore.SearchResultsStore);
+
+            UpdateSearchResults(searchResultStore.NumResultsFound, searchResultStore.SearchResultsStore);
+
             if(searchResultStore.SelectedBook != null)
             {
                 _selectedBook = _searchResult.Where(s => s.OLID == searchResultStore.SelectedBook.OLID).FirstOrDefault();
             }
         }
 
-        public void UpdateSearchResults(IEnumerable<BookSearchResult> books)
+        public void UpdateSearchResults(int numBooksFound, IEnumerable<BookSearchResult> books)
         {
+            NumResultsFound = numBooksFound;
             _searchResult.Clear();
             foreach (BookSearchResult book in books)
             {
