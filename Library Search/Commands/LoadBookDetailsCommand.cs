@@ -19,12 +19,14 @@ namespace Library_Search.Commands
         private readonly IBooksProvider _booksProvider;
         // create a static logger field
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly IMessageBoxService _messageBoxService;
 
-        public LoadBookDetailsCommand(BookDetailsViewModel bookDetailsViewModel, IBooksProvider booksProvider, SearchResultStore searchResultStore)
+        public LoadBookDetailsCommand(BookDetailsViewModel bookDetailsViewModel, IBooksProvider booksProvider, SearchResultStore searchResultStore, IMessageBoxService messageBoxService)
         {
             _booksProvider = booksProvider;
             _bookDetailsViewModel = bookDetailsViewModel;
             _searchResultStore = searchResultStore;
+            _messageBoxService = messageBoxService;
         }
         public override async Task ExecuteAsync(object parameter)
         {
@@ -43,21 +45,21 @@ namespace Library_Search.Commands
                     {
                         message = "OLID is empty: title '" + _searchResultStore.SelectedBook.Title + "', author '" + _searchResultStore.SelectedBook.Authors + "'.";
                         logger.Error(message);
-                        MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 else
                 {
                     message = "There is no selected book.";
                     logger.Error(message);
-                    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
                 message = "Failed to load selected book.";
                 logger.Error(ex, message);
-                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); ;
+                _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); ;
             }
         }
     }

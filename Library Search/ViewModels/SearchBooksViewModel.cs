@@ -112,12 +112,12 @@ namespace Library_Search.ViewModels
 
         public IEnumerable<BookSearchResultViewModel> SearchResult => _searchResult;
 
-        public SearchBooksViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<BookDetailsViewModel> bookDetailsViewNavigationService)
+        public SearchBooksViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<BookDetailsViewModel> bookDetailsViewNavigationService, IMessageBoxService messageBoxService)
         {
             _searchResult = new ObservableCollection<BookSearchResultViewModel>();
             _selectedSearchCriteria = SearchCriteriaEnum.TitleAuthor;
 
-            SearchCommand = new SearchBooksCommand(this, searchResultStore);
+            SearchCommand = new SearchBooksCommand(this, searchResultStore, messageBoxService);
             DetailsCommand = new DetailsCommand(searchResultStore, this, bookDetailsViewNavigationService);
 
             _title = searchResultStore.Title;

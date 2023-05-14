@@ -19,11 +19,13 @@ namespace Library_Search.Commands
         private readonly SearchResultStore _searchResultStore;
         // create a static logger field
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly IMessageBoxService _messageBoxService;
 
-        public SearchBooksCommand(SearchBooksViewModel searchBooksViewModel, SearchResultStore searchResultStore)
+        public SearchBooksCommand(SearchBooksViewModel searchBooksViewModel, SearchResultStore searchResultStore, IMessageBoxService messageBoxService)
         {
             _searchBooksViewModel = searchBooksViewModel;
             _searchResultStore = searchResultStore;
+            _messageBoxService = messageBoxService;
         }
         
         public override async Task ExecuteAsync(object parameter)
@@ -58,7 +60,7 @@ namespace Library_Search.Commands
                         break;
                 }
                 logger.Error(ex, message);
-                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

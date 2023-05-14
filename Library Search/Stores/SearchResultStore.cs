@@ -24,6 +24,7 @@ namespace Library_Search.Stores
         private BookSearchResultViewModel? _selectedBook;
         // create a static logger field
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private IMessageBoxService _messageBoxService;
 
         public IEnumerable<BookSearchResult> SearchResultsStore => _searchResultsStore;
         public string? Title => _title;
@@ -33,10 +34,11 @@ namespace Library_Search.Stores
         public int NumResultsFound => _numResultsFound;
         public BookSearchResultViewModel? SelectedBook => _selectedBook;
 
-        public SearchResultStore(IBooksProvider booksProvider)
+        public SearchResultStore(IBooksProvider booksProvider, IMessageBoxService messageBoxService)
         {
             _searchResultsStore = new List<BookSearchResult>();
             _booksProvider = booksProvider;
+            _messageBoxService = messageBoxService;
         }
 
         public async Task LoadBooksByTitleAndAuthor(string? title, string? author)
@@ -74,7 +76,8 @@ namespace Library_Search.Stores
                 _numResultsFound = booksResponse.numFound;
                 foreach (Doc doc in booksResponse.docs)
                 {
-                    BookSearchResult book = new BookSearchResult(doc.title,
+                    BookSearchResult book = new BookSearchResult(
+                        doc.title,
                         doc.author_name != null ? string.Join(", ", doc.author_name) : "",
                         doc.first_publish_year,
                         doc.edition_count,
@@ -87,7 +90,7 @@ namespace Library_Search.Stores
             {
                 string message = "Failed to parse search response.";
                 logger.Error(ex, message);
-                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

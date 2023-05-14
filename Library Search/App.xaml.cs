@@ -22,6 +22,7 @@ namespace Library_Search
 
         private readonly HttpClient _httpClient;
         private readonly IBooksProvider _booksProvider;
+        private readonly IMessageBoxService _messageBoxService;
         private readonly BookPrepHttpClient _bookPrepHttpClient;
         private readonly SearchResultStore _searchResultStore;
         private readonly NavigationStore _navigationStore;        
@@ -31,10 +32,11 @@ namespace Library_Search
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(BASE_URI);
 
-            _bookPrepHttpClient = new BookPrepHttpClient(_httpClient);
+            _messageBoxService = new MessageBoxService();
+            _bookPrepHttpClient = new BookPrepHttpClient(_httpClient, _messageBoxService);
             _booksProvider = new BooksProvider(_bookPrepHttpClient);
 
-            _searchResultStore = new SearchResultStore(_booksProvider);
+            _searchResultStore = new SearchResultStore(_booksProvider, _messageBoxService);
             _navigationStore = new NavigationStore();
         }
 
@@ -53,17 +55,17 @@ namespace Library_Search
 
         private SearchBooksViewModel CreateSearchBooksViewModel()
         {
-            return new SearchBooksViewModel(_searchResultStore, _booksProvider, new NavigationService<BookDetailsViewModel>(_navigationStore, CreateBookDetailsViewModel));
+            return new SearchBooksViewModel(_searchResultStore, _booksProvider, new NavigationService<BookDetailsViewModel>(_navigationStore, CreateBookDetailsViewModel), _messageBoxService);
         }
 
         private BookDetailsViewModel CreateBookDetailsViewModel()
         {
-            return BookDetailsViewModel.LoadViewModel(_searchResultStore, _booksProvider, new NavigationService<SearchBooksViewModel>(_navigationStore, CreateSearchBooksViewModel));
+            return BookDetailsViewModel.LoadViewModel(_searchResultStore, _booksProvider, new NavigationService<SearchBooksViewModel>(_navigationStore, CreateSearchBooksViewModel), _messageBoxService);
         }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show("An unhandled exception just occurred: " + e.Exception.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            _messageBoxService.ShowMessageBox("An unhandled exception just occurred: " + e.Exception.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             e.Handled = true;
         }
     }

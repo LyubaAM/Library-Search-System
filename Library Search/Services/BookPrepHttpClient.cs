@@ -26,10 +26,12 @@ namespace Library_Search.Services
         private readonly HttpClient _client;
         // create a static logger field
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly IMessageBoxService _messageBoxService;
 
-        public BookPrepHttpClient(HttpClient client) 
+        public BookPrepHttpClient(HttpClient client, IMessageBoxService messageBoxService) 
         {
             _client = client;
+            _messageBoxService = messageBoxService;
         }
 
         public async Task<T> GetAsync<T> (string uri)
@@ -56,14 +58,14 @@ namespace Library_Search.Services
                 {
                     message = "Invalid JSON.";
                     logger.Error(ex, message);
-                    MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); ;
+                    _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
                 message = "HTTP Response was invalid and cannot be deserialised.";
                 logger.Error(message);
-                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return default(T);

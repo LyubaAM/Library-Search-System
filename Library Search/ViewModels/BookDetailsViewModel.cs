@@ -17,6 +17,7 @@ namespace Library_Search.ViewModels
     {
         // create a static logger field
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly IMessageBoxService _messageBoxService;
 
         private string _imgCoverSource;
 
@@ -155,17 +156,18 @@ namespace Library_Search.ViewModels
 
         public ICommand? BackToListCommand { get; }
         public ICommand LoadBookDetailsCommand { get; }
-        public BookDetailsViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService)
+        public BookDetailsViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService, IMessageBoxService messageBoxService)
         {
             _imgCoverSource = BookPrepHttpClient.COVER_URL.Replace(BookPrepHttpClient.OLID_PLACEHOLDER, searchResultStore.SelectedBook.OLID);
+            _messageBoxService = messageBoxService;
 
-            LoadBookDetailsCommand = new LoadBookDetailsCommand(this, booksProvider, searchResultStore);
+            LoadBookDetailsCommand = new LoadBookDetailsCommand(this, booksProvider, searchResultStore, messageBoxService);
             BackToListCommand = new NavigateCommand<SearchBooksViewModel>(searchBooksViewNavigationService);
         }
 
-        public static BookDetailsViewModel LoadViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService)
+        public static BookDetailsViewModel LoadViewModel(SearchResultStore searchResultStore, IBooksProvider booksProvider, NavigationService<SearchBooksViewModel> searchBooksViewNavigationService, IMessageBoxService messageBoxService)
         {
-            BookDetailsViewModel bookDetailsViewModel = new BookDetailsViewModel(searchResultStore, booksProvider, searchBooksViewNavigationService);
+            BookDetailsViewModel bookDetailsViewModel = new BookDetailsViewModel(searchResultStore, booksProvider, searchBooksViewNavigationService, messageBoxService);
             bookDetailsViewModel.LoadBookDetailsCommand.Execute(null);
 
             return bookDetailsViewModel;
@@ -192,7 +194,7 @@ namespace Library_Search.ViewModels
             {
                 string message = "Failed to parse book details response.";
                 logger.Error(ex, message);
-                MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageBoxService.ShowMessageBox(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
