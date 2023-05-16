@@ -28,7 +28,7 @@ namespace Library_Search.Commands
 
         public override void Execute(object? parameter)
         {
-            _searchResultStore.SetSelectedBookDetails(_searchBooksViewModel.SelectedBook);
+            _searchResultStore.SelectedBook = _searchBooksViewModel.SelectedBook;
             _bookDetailsViewNavigationService.Navigate();
         }
     }

@@ -185,8 +185,8 @@ namespace Library_Search.ViewModels
                 KnownEditions = knownEditions;
                 PageCount = bookDetailsResponse.number_of_pages;
                 PublishDate = bookDetailsResponse.publish_date;
-                ISBN10 = bookDetailsResponse.isbn_10.FirstOrDefault();
-                ISBN13 = bookDetailsResponse.isbn_13.FirstOrDefault();
+                ISBN10 = bookDetailsResponse.isbn_10 != null ? bookDetailsResponse.isbn_10.FirstOrDefault() : null;
+                ISBN13 = bookDetailsResponse.isbn_13 != null ? bookDetailsResponse.isbn_13.FirstOrDefault() : null;
 
                 logger.Info("Book details response parsed.");
             }

@@ -32,7 +32,17 @@ namespace Library_Search.Stores
         public string? Query => _query;
         public string? AdvancedSearch => _advancedSearch;        
         public int NumResultsFound => _numResultsFound;
-        public BookSearchResultViewModel? SelectedBook => _selectedBook;
+        public BookSearchResultViewModel? SelectedBook
+        {
+            get
+            {
+                return _selectedBook;
+            }
+            set
+            {
+                _selectedBook = value;
+            }
+        }
 
         public SearchResultStore(IBooksProvider booksProvider, IMessageBoxService messageBoxService)
         {
@@ -58,11 +68,6 @@ namespace Library_Search.Stores
             BooksSearchResponse booksResponse = await _booksProvider.GetBooksByQuery(_query);
 
             UpdateSearchResultsStore(booksResponse);
-        }
-
-        public void SetSelectedBookDetails(BookSearchResultViewModel selectedBook)
-        {
-            _selectedBook = selectedBook;
         }
 
         private void UpdateSearchResultsStore(BooksSearchResponse booksResponse)

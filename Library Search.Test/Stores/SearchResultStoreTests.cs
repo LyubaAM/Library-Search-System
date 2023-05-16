@@ -18,7 +18,6 @@ namespace Library_Search.Test.Stores
     public class SearchResultStoreTests
     {
         Mock<IBooksProvider> _mockBooksProvider;
-        Mock<IMessageBoxService> _mockMService;
         Mock<IMessageBoxService> _mockMessageBoxService;
         SearchResultStore _searchResultStore;
         const string TITLE = "testTitle";
@@ -31,7 +30,6 @@ namespace Library_Search.Test.Stores
         public void Setup()
         {
             _mockBooksProvider = new Mock<IBooksProvider>();
-            _mockMService = new Mock<IMessageBoxService>();
             _mockMessageBoxService = new Mock<IMessageBoxService>();
             _searchResultStore = new SearchResultStore(_mockBooksProvider.Object, _mockMessageBoxService.Object);
         }
@@ -121,7 +119,7 @@ namespace Library_Search.Test.Stores
         }
 
         [Test]
-        public async Task LoadBooksByTitleAndAuthor_WithTitleAndAuthor_ReturnsErrorMessageBox()
+        public async Task LoadBooksByTitleAndAuthor_WithEmptyBooksResponse_ReturnsErrorMessageBox()
         {
             //Arrange
             BooksSearchResponse booksResponse = new BooksSearchResponse();
